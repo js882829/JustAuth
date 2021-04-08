@@ -73,7 +73,7 @@ public enum AuthDefaultSource implements AuthSource {
         }
     },
     /**
-     * 钉钉
+     * 钉钉扫码登录
      */
     DINGTALK {
         @Override
@@ -89,6 +89,25 @@ public enum AuthDefaultSource implements AuthSource {
         @Override
         public String userInfo() {
             return "https://oapi.dingtalk.com/sns/getuserinfo_bycode";
+        }
+    },
+    /**
+     * 钉钉账号登录
+     */
+    DINGTALK_ACCOUNT {
+        @Override
+        public String authorize() {
+            return "https://oapi.dingtalk.com/connect/oauth2/sns_authorize";
+        }
+
+        @Override
+        public String accessToken() {
+            return DINGTALK.accessToken();
+        }
+
+        @Override
+        public String userInfo() {
+            return DINGTALK.userInfo();
         }
     },
     /**
@@ -315,17 +334,17 @@ public enum AuthDefaultSource implements AuthSource {
     FACEBOOK {
         @Override
         public String authorize() {
-            return "https://www.facebook.com/v9.0/dialog/oauth";
+            return "https://www.facebook.com/v10.0/dialog/oauth";
         }
 
         @Override
         public String accessToken() {
-            return "https://graph.facebook.com/v9.0/oauth/access_token";
+            return "https://graph.facebook.com/v10.0/oauth/access_token";
         }
 
         @Override
         public String userInfo() {
-            return "https://graph.facebook.com/v9.0/me";
+            return "https://graph.facebook.com/v10.0/me";
         }
     },
     /**
@@ -832,5 +851,129 @@ public enum AuthDefaultSource implements AuthSource {
         public String refresh() {
             return "https://oauth.aliyun.com/v1/token";
         }
-    }
+    },
+
+    /**
+     * Amazon
+     *
+     * @since 1.16.0
+     */
+    AMAZON {
+        @Override
+        public String authorize() {
+            return "https://www.amazon.com/ap/oa";
+        }
+
+        @Override
+        public String accessToken() {
+            return "https://api.amazon.com/auth/o2/token";
+        }
+
+        @Override
+        public String userInfo() {
+            return "https://api.amazon.com/user/profile";
+        }
+
+        @Override
+        public String refresh() {
+            return "https://api.amazon.com/auth/o2/token";
+        }
+    },
+    /**
+     * Slack
+     *
+     * @since 1.16.0
+     */
+    SLACK {
+        @Override
+        public String authorize() {
+            return "https://slack.com/oauth/v2/authorize";
+        }
+
+        /**
+         * 该 API 获取到的是 access token
+         *
+         * https://slack.com/api/oauth.token 获取到的是 workspace token
+         *
+         * @return String
+         */
+        @Override
+        public String accessToken() {
+            return "https://slack.com/api/oauth.v2.access";
+        }
+
+        @Override
+        public String userInfo() {
+            return "https://slack.com/api/users.info";
+        }
+
+        @Override
+        public String revoke() {
+            return "https://slack.com/api/auth.revoke";
+        }
+    },
+    /**
+     * line
+     *
+     * @since 1.16.0
+     */
+    LINE {
+        @Override
+        public String authorize() {
+            return "https://access.line.me/oauth2/v2.1/authorize";
+        }
+
+        @Override
+        public String accessToken() {
+            return "https://api.line.me/oauth2/v2.1/token";
+        }
+
+        @Override
+        public String userInfo() {
+            return "https://api.line.me/v2/profile";
+        }
+
+        @Override
+        public String refresh() {
+            return "https://api.line.me/oauth2/v2.1/token";
+        }
+
+        @Override
+        public String revoke() {
+            return "https://api.line.me/oauth2/v2.1/revoke";
+        }
+    },
+    /**
+     * Okta，
+     * <p>
+     * 团队/组织的域名不同，此处通过配置动态组装
+     *
+     * @since 1.16.0
+     */
+    OKTA {
+        @Override
+        public String authorize() {
+            return "https://%s.okta.com/oauth2/%s/v1/authorize";
+        }
+
+        @Override
+        public String accessToken() {
+            return "https://%s.okta.com/oauth2/%s/v1/token";
+        }
+
+        @Override
+        public String refresh() {
+            return "https://%s.okta.com/oauth2/%s/v1/token";
+        }
+
+        @Override
+        public String userInfo() {
+            return "https://%s.okta.com/oauth2/%s/v1/userinfo";
+        }
+
+        @Override
+        public String revoke() {
+            return "https://%s.okta.com/oauth2/%s/v1/revoke";
+        }
+    },
 }
